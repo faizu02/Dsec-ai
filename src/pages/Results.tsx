@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -20,7 +19,14 @@ const ResultsPage = () => {
     // Get filtered results from sessionStorage
     const storedResults = sessionStorage.getItem("filteredResults");
     if (storedResults) {
-      setResults(JSON.parse(storedResults));
+      const parsedResults: Student[] = JSON.parse(storedResults);
+      setResults(parsedResults);
+
+      // Speak the results
+      speakResults(parsedResults);
+    } else {
+      // Speak no results message
+      speakNoResults();
     }
 
     // Redirect to homepage after 10 seconds
@@ -30,6 +36,37 @@ const ResultsPage = () => {
 
     return () => clearTimeout(timer);
   }, [navigate]);
+
+  const speakResults = (students: Student[]) => {
+    if (!window.speechSynthesis) return;
+
+    let speechText = "";
+    if (students.length > 0) {
+      speechText = students.map(student => 
+        `${student.name} is available at ${student.block}-Block, ${student.floor} Floor, Room No: ${student.room_no}. Studies Artificial Intelligence and Data Science, ${student.year}.`
+      ).join(" ");
+    }
+
+    const utterance = new SpeechSynthesisUtterance(speechText);
+    utterance.lang = "en-UK";
+    utterance.rate = 0.9;
+
+    window.speechSynthesis.cancel(); // Stop any ongoing speech
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const speakNoResults = () => {
+    if (!window.speechSynthesis) return;
+
+    const utterance = new SpeechSynthesisUtterance(
+      "Sorry, currently no student found with your specifications."
+    );
+    utterance.lang = "en-UK";
+    utterance.rate = 0.9;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+  };
 
   return (
     <div className="min-h-screen bg-[#FAFAFF] p-4">
