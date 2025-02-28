@@ -14,30 +14,22 @@ const Index = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  // Text-to-speech
-    const utterance = new SpeechSynthesisUtterance("I'm saho warm welcome to dhanalakshmi srinivasan university");
-    utterance.lang = 'en-UK';
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
-
-    // Typing animation
-    const interval = setInterval(() => {
-      if (index <= text.length) {
-        setDisplayedText(text.slice(0, index));
-        index++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 70);
-
-
   useEffect(() => {
+    // Ensure speech plays only once per session
+    if (!sessionStorage.getItem("speechPlayed")) {
+      const utterance = new SpeechSynthesisUtterance("I'm Saho, warm welcomes to Dhanalakshmi Srinivasan University");
+      utterance.lang = 'en-UK';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+      sessionStorage.setItem("speechPlayed", "true"); // Store flag to prevent repetition
+    }
+
     const errorMessage = sessionStorage.getItem('error_message');
     if (errorMessage) {
       sessionStorage.removeItem('error_message');
     }
 
-    const text = "Welcome to Dhanlakshmi Srinivasan University!!";
+    const text = "Welcome to Dhanalakshmi Srinivasan University!!";
     let index = 0;
 
     setShowButton(true);
@@ -72,7 +64,7 @@ const Index = () => {
     }, 70);
   };
 
-  const handleNavigation = (path: string) => {
+  const handleNavigation = (path) => {
     setIsExiting(true);
     setTimeout(() => {
       navigate(path);
