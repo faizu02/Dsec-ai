@@ -14,11 +14,17 @@ const Index = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
+  useEffect(() => {
+  // Clear any ongoing speech to prevent repetition
+  window.speechSynthesis.cancel();  
+
   // Text-to-speech
-    const utterance = new SpeechSynthesisUtterance("I'm SAHO warm welcome to dhanalakshmi srinivasan university");
-    utterance.lang = 'en-UK';
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
+  const utterance = new SpeechSynthesisUtterance("I'm Saho, warm welcomes to Dhanalakshmi Srinivasan University");
+  utterance.lang = 'en-UK';
+  utterance.rate = 0.9;
+  window.speechSynthesis.speak(utterance);
+}, []);
+
 
   useEffect(() => {
     const errorMessage = sessionStorage.getItem('error_message');
