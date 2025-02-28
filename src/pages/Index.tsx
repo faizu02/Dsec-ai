@@ -14,16 +14,20 @@ const Index = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Ensure speech plays only once per session
+  // Function to handle speech synthesis
+  const speakText = (text: string) => {
     if (!sessionStorage.getItem("speechPlayed")) {
-      const utterance = new SpeechSynthesisUtterance("I'm Saho, warm welcomes to Dhanalakshmi Srinivasan University");
+      const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'en-UK';
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
-      sessionStorage.setItem("speechPlayed", "true"); // Store flag to prevent repetition
+      sessionStorage.setItem("speechPlayed", "true");
     }
+  };
 
+  useEffect(() => {
+    speakText("I'm Saho, warm welcomes to Dhanalakshmi Srinivasan University");
+    
     const errorMessage = sessionStorage.getItem('error_message');
     if (errorMessage) {
       sessionStorage.removeItem('error_message');
@@ -43,9 +47,7 @@ const Index = () => {
       }
     }, 100);
 
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const handleGetStarted = () => {
@@ -64,11 +66,9 @@ const Index = () => {
     }, 70);
   };
 
-  const handleNavigation = (path) => {
+  const handleNavigation = (path: string) => {
     setIsExiting(true);
-    setTimeout(() => {
-      navigate(path);
-    }, 500); 
+    setTimeout(() => navigate(path), 500);
   };
 
   return (
