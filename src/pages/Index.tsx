@@ -14,16 +14,21 @@ const Index = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  useEffect(() => {
-  // Clear any ongoing speech to prevent repetition
-  window.speechSynthesis.cancel();  
-
   // Text-to-speech
-  const utterance = new SpeechSynthesisUtterance("I'm Saho, warm welcomes to Dhanalakshmi Srinivasan University");
-  utterance.lang = 'en-UK';
-  utterance.rate = 0.9;
-  window.speechSynthesis.speak(utterance);
-}, []);
+    const utterance = new SpeechSynthesisUtterance("I'm saho warm welcome to dhanalakshmi srinivasan university");
+    utterance.lang = 'en-UK';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+
+    // Typing animation
+    const interval = setInterval(() => {
+      if (index <= text.length) {
+        setDisplayedText(text.slice(0, index));
+        index++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 70);
 
 
   useEffect(() => {
